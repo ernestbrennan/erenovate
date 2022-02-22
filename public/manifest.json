@@ -1,0 +1,7 @@
+{
+  "gcm_sender_id": "377026876536",
+  "name": "ErenovateGuarantee",
+  "short_name": "ErenovateGuarantee",
+  "gcm_user_visible_only": true,
+  "display": "standalone"
+}

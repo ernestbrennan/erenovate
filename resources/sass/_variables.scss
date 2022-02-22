@@ -1,0 +1,41 @@
+// Body
+$body-bg: #f8fafc;
+
+// Typography
+$font-family-sans-serif: "Nunito", sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+// Colors
+$blue: #3490dc;
+$indigo: #6574cd;
+$purple: #9561e2;
+$pink: #f66D9b;
+$red: #e3342f;
+$orange: #f6993f;
+$yellow: #ffed4a;
+$green: #38c172;
+$teal: #4dc0b5;
+$cyan: #6cb2eb;
+// Colors spa 
+$spa-blue: #1875F0;
+$spa-red: #F13A30;
+$spa-green: #2CCCD3;
+$spa-grey: #F5F5F5;
+$spa-grey1: #FAFAFA;
+
+$cubeCount: 4;
+$animationDuration: 2.4s;
+$delayRange: ($animationDuration / 2);
+
+$spinkit-size: 4em !default;
+$spinkit-spinner-color: #337ab7 !default;
+
+// Small tablets and large smartphones (landscape view)
+$screen-sm-min: 576px;
+// Small tablets (portrait view)
+$screen-md-min: 768px;
+// Tablets and small desktops
+$screen-lg-min: 992px;
+// Large tablets and desktops
+$screen-xl-min: 1200px;

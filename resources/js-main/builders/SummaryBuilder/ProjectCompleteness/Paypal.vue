@@ -1,0 +1,110 @@
+<template>
+  <v-dialog light max-width="556" v-model="show" content-class="main-dialog__scroll-content scrollbar">
+    <div class="main-dialog main-dialog_open">
+
+      <div class="main-dialog__header">
+        <img @click="close" class="close-dialog" src="/img/icon/close-modal_gray.svg">
+        <h5 class="main-dialog__header-title">
+          <template v-if="user.role === 'homeowner'">Guarantee Project Fee</template>
+          <template v-else>Guarantee Fee Adjustment</template>
+        </h5>
+      </div>
+
+      <div class="main-dialog__body">
+        <template v-if="user.role === 'homeowner'">
+          <p class="main-dialog__p">
+            Great stuff, they project is completed. It appears the total Project price has changed from an initial
+            ${{summary_table.payment_total.estimated_total}}
+            to the revised ${{summary_table.payment_total.final_total}} total cost.
+          </p>
+          <p class="main-dialog__p">You previously paid ${{estimated_total_fee}} as the eRenovate Project Fee.</p>
+          <p class="main-dialog__p">
+            As per the revised price, please pay remaining balance of ${{getFee(price)}}
+            to cover the revised Project Fee; This is required to begin the 88 Day Maintenance Period for the homeowner.
+          </p>
+        </template>
+        <template v-else>
+          <p class="main-dialog__p">
+            The original Project Price according to the initial Project Scope details was
+            ${{summary_table.payment_total.estimated_total}}
+          </p>
+          <p class="main-dialog__p">
+            The Final Project Price is ${{summary_table.payment_total.final_total}}
+          </p>
+          <p class="main-dialog__p">
+            An adjusted Guarantee Project Fee of ${{getFee(price)}} is due in consideration of the Final Project Price.
+          </p>
+          <p class="main-dialog__p">
+            To activate the client’s 88 Day Maintenance Guarantee Period, please submit payment via PayPal below.
+          </p>
+        </template>
+      </div>
+
+      <div class="main-dialog__footer">
+        <div class="main-dialog__footer-btn-row">
+          <div id="paypal-button-container" ref="paypal"></div>
+        </div>
+      </div>
+    </div>
+  </v-dialog>
+</template>
+
+<script>
+  import {paypal_mixin} from '@/components/mixins/paypal/paypal'
+  import {mapGetters} from 'vuex'
+  import {paySummaryFee} from '@/api/payment'
+
+  export default {
+    mixins: [paypal_mixin],
+    props: {
+      value: Boolean,
+    },
+    computed: {
+      show: {
+        get() {
+          return this.value
+        },
+        set(value) {
+          this.$emit('input', value)
+        }
+      },
+      price() {
+        return formatPrice(this.summary_table.payment_total.final_total) - formatPrice(this.summary_table.payment_total.estimated_total)
+      },
+      estimated_total_fee() {
+        return this.getFee(formatPrice(this.summary_table.payment_total.estimated_total))
+      },
+      ...mapGetters({
+        user: 'user',
+        guarantee_project: 'guarantee_project',
+        summary_table: 'summary/summary_table',
+        summary_contract: 'summary/contract',
+      })
+    },
+    methods: {
+      close() {
+        this.show = false;
+      },
+      getPaymentDescription() {
+        let project_name = this.guarantee_project.project_name;
+        let user_name = this.user.firstname + ' ' + this.user.last_name;
+        return `Project ${project_name} - ${user_name}`
+      },
+      approvePayment(data, details) {
+        this.$store.state.global_loader = true;
+        paySummaryFee( data.orderID, this.summary_contract.id).then(response => {
+            this.$store.state.global_loader = false;
+            if (response.data.response.status === 'COMPLETED') {
+
+              this.$router.push({
+                name: 'messages',
+                params: {
+                  guarantee_project_id: this.$route.params.guarantee_project_id
+                }
+              });
+            }
+          });
+      }
+    },
+  }
+</script>

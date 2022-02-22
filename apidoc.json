@@ -1,0 +1,14 @@
+{
+  "name": "Phone Book",
+  "version": "0.1.0",
+  "description": "Description",
+  "title": "Phone Book",
+  "url": "http://phone-book.local/api/",
+  "template": {
+    "forceLanguage": "en",
+    "withCompare": false,
+    "jQueryAjaxSetup": {
+
+    }
+  }
+}
